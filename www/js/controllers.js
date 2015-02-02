@@ -1,4 +1,30 @@
-angular.module('starter.controllers', [])
+var BASE_URL = "http://192.168.5.145:3000";
+
+angular.module('starter.api', [])
+  .service('easy_client', ['$window', '$http', function (win, $http) {
+      var token = null;
+      var access_token = '';
+      // if (hello.getAuthResponse('dashboard')) {
+      //     access_token = hello.getAuthResponse('dashboard').access_token;
+      // }
+      this.setToken = function (token) {
+          access_token = token;
+      };
+
+      this.registerToken = function (token) {
+          return $http.post(BASE_URL + "/users/register_token.json?access_token=" + access_token,
+              {token: window.token});
+      };
+      
+      this.getRestaurantMenu = function (restaurant_id) {
+        return $http.get(BASE_URL + '/api/restaurants/' + restaurant_id + '/menu.json', {params: {access_token: access_token}});
+      };
+
+      this.explore = function(ll){
+        return $http.get(BASE_URL +'/api/restaurants/explore.json', {params: {ll: ll, access_token: access_token}});
+      }
+  }])
+angular.module('starter.controllers', ['starter.api'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
   // Form data for the login modal
@@ -43,7 +69,7 @@ angular.module('starter.controllers', [])
     { title: 'Cowbell', id: 6 }
   ];
 })
-.controller('ExploreCtrl', function($scope, $stateParams, $window, $http) {
+.controller('ExploreCtrl', function($scope, $stateParams, $window, $http, easy_client) {
   $scope.supportsGeo = $window.navigator;
   $scope.position = null;
   $scope.restaurants = [];
@@ -53,7 +79,8 @@ angular.module('starter.controllers', [])
             $scope.position = position;
             ll = "" + position.coords.latitude + "," + position.coords.longitude;
             console.log(position);
-            $http.get('http://192.168.5.145:3000/api/restaurants/explore.json', {params: {ll: ll}}).success(function(data, status, headers, config) {
+            easy_client.explore(ll)
+            .success(function(data, status, headers, config) {
               $scope.restaurants = data.restaurants;
             }).
             error(function(data, status, headers, config) {
@@ -70,29 +97,19 @@ angular.module('starter.controllers', [])
 
 })
 .controller('PlaylistCtrl', function($scope, $stateParams, $http) {
-  $scope.menu = [];
-  $scope.getMenu = function(){
-      $http.get('http://192.168.5.145:3000/api/restaurants/116/menu.json').success(function(data, status, headers, config) {
-          $scope.menu = data.menu_sections;
 
-      }).error(function(data, status, headers, config) {
-              // called asynchronously if an error occurs
-              // or server returns response with an error status.
-      }); 
-  };
-  $scope.getMenu();
 })
 
-.controller('RestaurantMenuCtrl', function($scope, $stateParams, $http) {
+.controller('RestaurantMenuCtrl', function($scope, $stateParams, $http, easy_client) {
   $scope.menu = [];
   console.log($stateParams);
   $scope.getMenu = function(){
-      $http.get('http://192.168.5.145:3000/api/restaurants/'+ $stateParams.restaurant_id + '/menu.json').success(function(data, status, headers, config) {
+      easy_client.getRestaurantMenu($stateParams.restaurant_id)
+      .success(function(data, status, headers, config) {
           $scope.menu = data.menu_sections;
-
       }).error(function(data, status, headers, config) {
-              // called asynchronously if an error occurs
-              // or server returns response with an error status.
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
       }); 
   };
   $scope.getMenu();
