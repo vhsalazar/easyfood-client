@@ -43,6 +43,31 @@ angular.module('starter.controllers', [])
     { title: 'Cowbell', id: 6 }
   ];
 })
+.controller('HomeCtrl', function($scope, $stateParams, $window, $http) {
+  $scope.supportsGeo = $window.navigator;
+  $scope.position = null;
+  $scope.restaurants = [];
+  $scope.doTest1 = function() {
+    window.navigator.geolocation.getCurrentPosition(function(position) {
+        $scope.$apply(function() {
+            $scope.position = position;
+            ll = "" + position.coords.latitude + "," + position.coords.longitude;
+            console.log(position);
+            $http.get('http://localhost:3000/api/restaurants/explore.json', {params: {ll: ll}}).success(function(data, status, headers, config) {
+              $scope.restaurants = data.restaurants;
+            }).
+            error(function(data, status, headers, config) {
+              // called asynchronously if an error occurs
+              // or server returns response with an error status.
+            });
+            $scope.restaurants = [ "AAAA", "BBBBB", "CcCCC"];
+        });
+    }, function(error) {
+        alert(error);
+    });
+  };
+  $scope.doTest1();
 
+})
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 });

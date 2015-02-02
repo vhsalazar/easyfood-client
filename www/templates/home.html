@@ -1,0 +1,21 @@
+<ion-view title="Search">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+    <!-- <h1>Home</h1>
+    <button class="button button-clear" ng-click="doTest1()">GPS</button>
+    <p>Posicion GPS <spam>{{position}}</spam></p> -->
+	<ion-list>
+	  <ion-item ng-repeat="restaurant in restaurants" class="item item-thumbnail-left" href="#">
+
+        <img src="http://lorempixel.com/200/200/food/?{{restaurant.id}} ">
+        <h2>{{restaurant.name}}</h2>
+
+        <p>{{restaurant.location.address}}<br>
+           {{restaurant.distance/1000| number : 1}}km   Mínimo:  Bs. {{restaurant.minimun_order}} 
+        </p>
+	  </ion-item>
+	</ion-list>    
+  </ion-content>
+</ion-view>
