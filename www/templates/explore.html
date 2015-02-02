@@ -7,7 +7,7 @@
     <button class="button button-clear" ng-click="doTest1()">GPS</button>
     <p>Posicion GPS <spam>{{position}}</spam></p> -->
 	<ion-list>
-	  <ion-item ng-repeat="restaurant in restaurants" class="item item-thumbnail-left" href="#">
+	  <ion-item ng-repeat="restaurant in restaurants" class="item item-thumbnail-left" href="#/app/restaurants/{{restaurant.id}}">
 
         <img src="http://lorempixel.com/80/80/food/?{{restaurant.id}} ">
         <h2>{{restaurant.name}}</h2>

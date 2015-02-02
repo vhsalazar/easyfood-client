@@ -43,7 +43,7 @@ angular.module('starter.controllers', [])
     { title: 'Cowbell', id: 6 }
   ];
 })
-.controller('HomeCtrl', function($scope, $stateParams, $window, $http) {
+.controller('ExploreCtrl', function($scope, $stateParams, $window, $http) {
   $scope.supportsGeo = $window.navigator;
   $scope.position = null;
   $scope.restaurants = [];
@@ -81,4 +81,20 @@ angular.module('starter.controllers', [])
       }); 
   };
   $scope.getMenu();
-});
+})
+
+.controller('RestaurantMenuCtrl', function($scope, $stateParams, $http) {
+  $scope.menu = [];
+  console.log($stateParams);
+  $scope.getMenu = function(){
+      $http.get('http://192.168.5.145:3000/api/restaurants/'+ $stateParams.restaurant_id + '/menu.json').success(function(data, status, headers, config) {
+          $scope.menu = data.menu_sections;
+
+      }).error(function(data, status, headers, config) {
+              // called asynchronously if an error occurs
+              // or server returns response with an error status.
+      }); 
+  };
+  $scope.getMenu();
+})
+;
