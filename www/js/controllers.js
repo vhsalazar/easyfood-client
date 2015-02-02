@@ -53,7 +53,7 @@ angular.module('starter.controllers', [])
             $scope.position = position;
             ll = "" + position.coords.latitude + "," + position.coords.longitude;
             console.log(position);
-            $http.get('http://localhost:3000/api/restaurants/explore.json', {params: {ll: ll}}).success(function(data, status, headers, config) {
+            $http.get('http://192.168.5.145:3000/api/restaurants/explore.json', {params: {ll: ll}}).success(function(data, status, headers, config) {
               $scope.restaurants = data.restaurants;
             }).
             error(function(data, status, headers, config) {
@@ -69,5 +69,16 @@ angular.module('starter.controllers', [])
   $scope.doTest1();
 
 })
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller('PlaylistCtrl', function($scope, $stateParams, $http) {
+  $scope.menu = [];
+  $scope.getMenu = function(){
+      $http.get('http://192.168.5.145:3000/api/restaurants/116/menu.json').success(function(data, status, headers, config) {
+          $scope.menu = data.menu_sections;
+
+      }).error(function(data, status, headers, config) {
+              // called asynchronously if an error occurs
+              // or server returns response with an error status.
+      }); 
+  };
+  $scope.getMenu();
 });
