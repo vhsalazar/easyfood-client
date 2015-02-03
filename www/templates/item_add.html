@@ -1,0 +1,22 @@
+<ion-view title="Menu">
+  <ion-content class="has-header">
+    <div class="card">
+      <div class="item item-divider">
+        {{item.name}} - {{item.price}}
+      </div>
+      <div class="item item-text-wrap">
+        {{item.description}}
+      </div>
+      <button class="button ion-minus button-positive" ng-click="decrease()"></button>
+      <span>{{quantity}}</span>
+      <button class="button ion-plus button-positive" ng-click="increase()"></button>
+      <button class="button button-assertive" ng-click="addToBag()">
+      Add to Bag
+      </button>
+      <p>
+        Total: {{total_price()}}
+      </p>
+    </div>
+
+  </ion-content>
+</ion-view>

@@ -1,16 +1,17 @@
 <ion-view title="Menu">
   <ion-content class="has-header">
-    <ion-list>
+    <ion-list>      
+      <li ng-hide="menu.length">Menu :(</li>
     	<div ng-repeat-start="section in menu">
     		<ion-item class="item item-divider">
     			{{section.name}}
     		</ion-item>
-			<ion-item class="item" ng-repeat="item in section.menu_items">
+			<ion-item class="item" ng-repeat="item in section.menu_items" href="#/app/item/{{item.id}}">
     			{{item.name}}
     			<span class="item-note">
       			{{item.price}} Bs
     			</span>
-    		</ion-item>
+  		</ion-item>
     	</div>    		
     	<div ng-repeat-end=""></div>
 	</ion-list>

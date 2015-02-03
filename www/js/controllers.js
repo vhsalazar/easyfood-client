@@ -12,12 +12,16 @@ angular.module('starter.api', [])
       };
 
       this.registerToken = function (token) {
-          return $http.post(BASE_URL + "/users/register_token.json?access_token=" + access_token,
-              {token: window.token});
+        return $http.post(BASE_URL + "/users/register_token.json?access_token=" + access_token,
+            {token: window.token});
       };
       
       this.getRestaurantMenu = function (restaurant_id) {
         return $http.get(BASE_URL + '/api/restaurants/' + restaurant_id + '/menu.json', {params: {access_token: access_token}});
+      };
+
+      this.getMenuItem = function (menu_item_id) {
+        return $http.get(BASE_URL + '/api/items/' + menu_item_id + '.json', {params: {access_token: access_token}});
       };
 
       this.explore = function(ll){
@@ -104,14 +108,52 @@ angular.module('starter.controllers', ['starter.api'])
   $scope.menu = [];
   console.log($stateParams);
   $scope.getMenu = function(){
-      easy_client.getRestaurantMenu($stateParams.restaurant_id)
-      .success(function(data, status, headers, config) {
-          $scope.menu = data.menu_sections;
-      }).error(function(data, status, headers, config) {
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
-      }); 
+    easy_client.getRestaurantMenu($stateParams.restaurant_id)
+    .success(function(data, status, headers, config) {
+        $scope.menu = data.menu_sections;
+    }).error(function(data, status, headers, config) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+    }); 
   };
   $scope.getMenu();
 })
+
+
+.controller('MenuItemCtrl', function($scope, $stateParams, $http, $window, easy_client) {
+  $scope.item = [];
+  $scope.quantity = 1;
+  $scope.total_price = function(){
+    return $scope.quantity * $scope.item.price;
+  };
+  console.log($stateParams);
+  $scope.setup = function(){
+    easy_client.getMenuItem($stateParams.item_id)
+    .success(function(data, status, headers, config) {
+        $scope.item = data;
+    }).error(function(data, status, headers, config) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+    }); 
+  };
+  $scope.decrease = function(){
+    if ($scope.quantity > 1){
+      $scope.quantity -= 1;
+    }    
+  }
+
+  $scope.increase = function(){
+    $scope.quantity++;
+  }
+
+  $scope.addToBag = function(){
+    $window.history.back();
+  }
+
+  $scope.setup();
+})
+
+
+
+
 ;

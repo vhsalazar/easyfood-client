@@ -84,9 +84,19 @@ angular.module('starter', ['ionic', 'starter.controllers'])
           controller: 'RestaurantMenuCtrl'
         }
       }
+    })
+
+    .state('app.add_item', {
+      url: "/item/:item_id",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/item_add.html",
+          controller: 'MenuItemCtrl'
+        }
+      }
     });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/explore');
 });
 
