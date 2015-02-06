@@ -5,7 +5,7 @@
       <ion-nav-back-button class="button-clear"><i class="icon ion-ios7-arrow-back"></i> Back</ion-nav-back-button>
       <ion-nav-buttons side="right">
         <button class="button icon ion-bag" ng-click="login()">
-        <span class="badge badge-assertive">3</span>
+        <span class="badge badge-assertive">{{bag_length()}}</span>
         </button>
         <ion-list>          
       </ion-nav-buttons>
@@ -20,21 +20,14 @@
     </header>
     <ion-content class="has-header">
       <ion-list>
-        <!-- <ion-item nav-clear menu-close ng-click="login()">
-          Login
-        </ion-item> -->
         <ion-item nav-clear menu-close href="#/app/explore">
           Find your Food
         </ion-item>        
-        <ion-item nav-clear menu-close href="#/app/search">
-          Search
-        </ion-item>
+
         <ion-item nav-clear menu-close href="#/app/browse">
           Browse
         </ion-item>
-        <!-- <ion-item nav-clear menu-close href="#/app/playlists">
-          Playlists
-        </ion-item> -->
+
         <ion-item nav-clear menu-close ng-click="login()">
           Logout
         </ion-item>

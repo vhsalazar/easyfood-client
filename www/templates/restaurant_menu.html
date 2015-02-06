@@ -6,7 +6,7 @@
     		<ion-item class="item item-divider">
     			{{section.name}}
     		</ion-item>
-			<ion-item class="item" ng-repeat="item in section.menu_items" href="#/app/item/{{item.id}}">
+			<ion-item class="item" ng-repeat="item in section.menu_items" href="#/app/item/{{item.id}}?r={{section.restaurant_id}}">
     			{{item.name}}
     			<span class="item-note">
       			{{item.price}} Bs

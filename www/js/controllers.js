@@ -1,36 +1,78 @@
-var BASE_URL = "http://192.168.5.145:3000";
+var BASE_URL = "http://192.168.10.188:3000";
 
 angular.module('starter.api', [])
-  .service('easy_client', ['$window', '$http', function (win, $http) {
-      var token = null;
-      var access_token = '';
-      // if (hello.getAuthResponse('dashboard')) {
-      //     access_token = hello.getAuthResponse('dashboard').access_token;
-      // }
-      this.setToken = function (token) {
-          access_token = token;
-      };
+.service('easy_client', ['$window', '$http', function (win, $http) {
+  var token = null;
+  var access_token = '';
+    // if (hello.getAuthResponse('dashboard')) {
+    //     access_token = hello.getAuthResponse('dashboard').access_token;
+    // }
+    this.setToken = function (token) {
+      access_token = token;
+    };
 
-      this.registerToken = function (token) {
-        return $http.post(BASE_URL + "/users/register_token.json?access_token=" + access_token,
-            {token: window.token});
-      };
-      
-      this.getRestaurantMenu = function (restaurant_id) {
-        return $http.get(BASE_URL + '/api/restaurants/' + restaurant_id + '/menu.json', {params: {access_token: access_token}});
-      };
+    this.registerToken = function (token) {
+      return $http.post(BASE_URL + "/users/register_token.json?access_token=" + access_token,
+        {token: window.token});
+    };
+    
+    this.getRestaurantMenu = function (restaurant_id) {
+      return $http.get(BASE_URL + '/api/restaurants/' + restaurant_id + '/menu.json', {params: {access_token: access_token}});
+    };
 
-      this.getMenuItem = function (menu_item_id) {
-        return $http.get(BASE_URL + '/api/items/' + menu_item_id + '.json', {params: {access_token: access_token}});
-      };
+    this.getMenuItem = function (menu_item_id) {
+      return $http.get(BASE_URL + '/api/items/' + menu_item_id + '.json', {params: {access_token: access_token}});
+    };
 
-      this.explore = function(ll){
-        return $http.get(BASE_URL +'/api/restaurants/explore.json', {params: {ll: ll, access_token: access_token}});
-      }
-  }])
+    this.explore = function(ll){
+      return $http.get(BASE_URL +'/api/restaurants/explore.json', {params: {ll: ll, access_token: access_token}});
+    }
+}]);
+
 angular.module('starter.controllers', ['starter.api'])
+.service('easy_bag', [function () {
+  var bag = [];
+  var restaurant_id = null; // this bag only support one restaurant
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+  this.isValidItem = function(item){
+    console.log(item);
+    if (this.getLength() <= 1){
+      return true;
+    }else{
+      console.log('validation');
+      return item.restaurant_id == restaurant_id;
+    }
+  }
+
+  this.addItem = function(item){
+    bag.push(item);
+    restaurant_id = item.restaurant_id;
+    return bag.length;
+  }
+
+  this.clearAll = function(){
+    bag = [];
+  }
+  
+  this.getLength = function(){
+    return bag.length;
+  }
+  
+}]).
+
+service('easy_navigation', [function(){
+  var restaurant = null;
+  var section = null;
+  var item = null;
+  this.clearAll = function(){
+    restaurant = null;
+    section = null;
+    item = null;
+  }
+}])
+
+
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, easy_bag) {
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -45,6 +87,8 @@ angular.module('starter.controllers', ['starter.api'])
   $scope.closeLogin = function() {
     $scope.modal.hide();
   };
+
+  $scope.bag_length = easy_bag.getLength;
 
   // Open the login modal
   $scope.login = function() {
@@ -63,44 +107,41 @@ angular.module('starter.controllers', ['starter.api'])
   };
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-.controller('ExploreCtrl', function($scope, $stateParams, $window, $http, easy_client) {
+.controller('ExploreCtrl', function($scope, $stateParams, $window, $http, easy_client, easy_navigation) {
   $scope.supportsGeo = $window.navigator;
   $scope.position = null;
   $scope.restaurants = [];
+  easy_navigation.clearAll()
   $scope.doTest1 = function() {
     window.navigator.geolocation.getCurrentPosition(function(position) {
-        $scope.$apply(function() {
-            $scope.position = position;
-            ll = "" + position.coords.latitude + "," + position.coords.longitude;
-            console.log(position);
-            easy_client.explore(ll)
-            .success(function(data, status, headers, config) {
-              $scope.restaurants = data.restaurants;
-            }).
-            error(function(data, status, headers, config) {
+      $scope.$apply(function() {
+        $scope.position = position;
+        ll = "" + position.coords.latitude + "," + position.coords.longitude;
+        console.log(position);
+        easy_client.explore(ll)
+        .success(function(data, status, headers, config) {
+          $scope.restaurants = data.restaurants;
+        }).
+        error(function(data, status, headers, config) {
               // called asynchronously if an error occurs
               // or server returns response with an error status.
             });
-            $scope.restaurants = [ "AAAA", "BBBBB", "CcCCC"];
-        });
+      });
     }, function(error) {
-        alert(error);
+      $scope.$apply(function() {
+        ll = "-17.820529636235577,-63.23293028751897";
+        easy_client.explore(ll)
+        .success(function(data, status, headers, config) {
+          $scope.restaurants = data.restaurants;
+        }).
+        error(function(data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+          });
+      });
     });
-  };
-  $scope.doTest1();
-
-})
-.controller('PlaylistCtrl', function($scope, $stateParams, $http) {
+};
+$scope.doTest1();
 
 })
 
@@ -110,7 +151,7 @@ angular.module('starter.controllers', ['starter.api'])
   $scope.getMenu = function(){
     easy_client.getRestaurantMenu($stateParams.restaurant_id)
     .success(function(data, status, headers, config) {
-        $scope.menu = data.menu_sections;
+      $scope.menu = data.menu_sections;
     }).error(function(data, status, headers, config) {
       // called asynchronously if an error occurs
       // or server returns response with an error status.
@@ -120,22 +161,25 @@ angular.module('starter.controllers', ['starter.api'])
 })
 
 
-.controller('MenuItemCtrl', function($scope, $stateParams, $http, $window, easy_client) {
+.controller('MenuItemCtrl', function($scope, $stateParams, $http, $window, easy_client, easy_bag) {
   $scope.item = [];
   $scope.quantity = 1;
+  $scope.restaurant_id = $stateParams.r;  
+
   $scope.total_price = function(){
     return $scope.quantity * $scope.item.price;
   };
-  console.log($stateParams);
+
   $scope.setup = function(){
     easy_client.getMenuItem($stateParams.item_id)
     .success(function(data, status, headers, config) {
-        $scope.item = data;
+      $scope.item = data;
     }).error(function(data, status, headers, config) {
       // called asynchronously if an error occurs
       // or server returns response with an error status.
     }); 
   };
+
   $scope.decrease = function(){
     if ($scope.quantity > 1){
       $scope.quantity -= 1;
@@ -147,13 +191,13 @@ angular.module('starter.controllers', ['starter.api'])
   }
 
   $scope.addToBag = function(){
-    $window.history.back();
+    if (easy_bag.isValidItem($scope.item)){
+      easy_bag.addItem($scope.item);
+      $window.history.back();
+    }else{
+      alert('invalid');
+    }
   }
 
   $scope.setup();
-})
-
-
-
-
-;
+});
