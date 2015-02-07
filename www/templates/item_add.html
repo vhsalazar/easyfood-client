@@ -7,15 +7,28 @@
       <div class="item item-text-wrap">
         {{item.description}}
       </div>
-      <button class="button ion-minus button-positive" ng-click="decrease()"></button>
-      <span>{{quantity}}</span>
-      <button class="button ion-plus button-positive" ng-click="increase()"></button>
-      <button class="button button-assertive" ng-click="addToBag()">
-      Add to Bag
-      </button>
-      <p>
-        Total: {{total_price()}}
-      </p>
+    </div>
+
+    <div class="row row-center">
+      <div class="col">
+        <button class="button ion-minus button-positive button-block" ng-click="decrease()"></button>
+      </div>
+      <div class="col center">
+        <h3>{{quantity}}</h3>
+      </div>
+      <div class="col col-center">
+        <button class="button ion-plus button-positive button-block" ng-click="increase()"></button>
+      </div>
+      <div class="col col-50">  
+        <button class="button button-assertive button-block" ng-click="addToBag()">Add to Bag</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label class="item item-input">
+          <textarea placeholder="Any special request?">{{special_request}}</textarea>
+        </label>
+      </div>
     </div>
 
   </ion-content>

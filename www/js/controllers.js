@@ -35,19 +35,17 @@ angular.module('starter.controllers', ['starter.api'])
   var bag = [];
   var restaurant_id = null; // this bag only support one restaurant
 
-  this.isValidItem = function(item){
-    console.log(item);
-    if (this.getLength() <= 1){
+  this.isValidItem = function(bag_item){
+    if (this.getLength() == 0){
       return true;
     }else{
-      console.log('validation');
-      return item.restaurant_id == restaurant_id;
+      return bag_item.restaurant_id == restaurant_id;
     }
   }
 
-  this.addItem = function(item){
-    bag.push(item);
-    restaurant_id = item.restaurant_id;
+  this.addItem = function(bag_item){
+    bag.push(bag_item);
+    restaurant_id = bag_item.restaurant_id;
     return bag.length;
   }
 
@@ -177,7 +175,8 @@ service('easy_navigation', [function(){
   $scope.restaurant = easy_navigation.restaurant;
   $scope.item = [];
   $scope.quantity = 1;
-  $scope.restaurant_id = $stateParams.r;  
+  $scope.restaurant_id = $stateParams.r;
+  $scope.special_request = "";
 
   $scope.total_price = function(){
     return $scope.quantity * $scope.item.price;
@@ -203,9 +202,17 @@ service('easy_navigation', [function(){
     $scope.quantity++;
   }
 
-  $scope.addToBag = function(){
-    if (easy_bag.isValidItem($scope.item)){
-      easy_bag.addItem($scope.item);
+  $scope.addToBag = function(){    
+    bag_item = {
+      restaurant_id: $scope.restaurant.id,
+      menu_item: $scope.item,
+      quantity: $scope.quantity,
+      special_request: $scope.special_request
+    }
+    console.log("=======>");
+    console.log(bag_item);
+    if (easy_bag.isValidItem(bag_item)){
+      easy_bag.addItem(bag_item);
       $window.history.back();
     }else{
       alert('invalid');
