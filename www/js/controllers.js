@@ -1,4 +1,4 @@
-var BASE_URL = "http://192.168.10.188:3000";
+var BASE_URL = "http://192.168.5.145:3000";
 
 angular.module('starter.api', [])
 .service('easy_client', ['$window', '$http', function (win, $http) {
@@ -62,6 +62,7 @@ angular.module('starter.controllers', ['starter.api'])
 }]).
 
 service('easy_navigation', [function(){
+  var restaurants = null;
   var restaurant = null;
   var section = null;
   var item = null;
@@ -121,6 +122,7 @@ service('easy_navigation', [function(){
         easy_client.explore(ll)
         .success(function(data, status, headers, config) {
           $scope.restaurants = data.restaurants;
+          easy_navigation.restaurants = data.restaurants;
         }).
         error(function(data, status, headers, config) {
               // called asynchronously if an error occurs
@@ -145,7 +147,13 @@ service('easy_navigation', [function(){
     easy_navigation.restaurant = restaurant;
     $state.go('app.menu', {restaurant_id: restaurant.id});    
   };
-  $scope.getRestaurants();
+
+  if (easy_navigation.restaurants == null){
+    $scope.getRestaurants();  
+  }else{
+    $scope.restaurants = easy_navigation.restaurants;
+  }
+  
 })
 
 .controller('RestaurantMenuCtrl', function($scope, $stateParams, $http, easy_client, easy_navigation) {
