@@ -7,6 +7,7 @@ angular.module('starter.api', [])
     // if (hello.getAuthResponse('dashboard')) {
     //     access_token = hello.getAuthResponse('dashboard').access_token;
     // }
+
     this.setToken = function (token) {
       access_token = token;
     };
@@ -57,7 +58,7 @@ angular.module('starter.controllers', ['starter.api'])
   this.getLength = function(){
     return bag.length;
   }
-  
+
 }]).
 
 service('easy_navigation', [function(){
@@ -107,12 +108,11 @@ service('easy_navigation', [function(){
   };
 })
 
-.controller('ExploreCtrl', function($scope, $stateParams, $window, $http, easy_client, easy_navigation) {
+.controller('ExploreCtrl', function($scope, $stateParams, $state, $window, $http, easy_client, easy_navigation) {
   $scope.supportsGeo = $window.navigator;
   $scope.position = null;
   $scope.restaurants = [];
-  easy_navigation.clearAll()
-  $scope.doTest1 = function() {
+  $scope.getRestaurants = function() {
     window.navigator.geolocation.getCurrentPosition(function(position) {
       $scope.$apply(function() {
         $scope.position = position;
@@ -140,13 +140,17 @@ service('easy_navigation', [function(){
           });
       });
     });
-};
-$scope.doTest1();
-
+  };
+  $scope.selectRestaurant = function(restaurant){
+    easy_navigation.restaurant = restaurant;
+    $state.go('app.menu', {restaurant_id: restaurant.id});    
+  };
+  $scope.getRestaurants();
 })
 
-.controller('RestaurantMenuCtrl', function($scope, $stateParams, $http, easy_client) {
+.controller('RestaurantMenuCtrl', function($scope, $stateParams, $http, easy_client, easy_navigation) {
   $scope.menu = [];
+  $scope.restaurant = easy_navigation.restaurant;
   console.log($stateParams);
   $scope.getMenu = function(){
     easy_client.getRestaurantMenu($stateParams.restaurant_id)
@@ -161,7 +165,8 @@ $scope.doTest1();
 })
 
 
-.controller('MenuItemCtrl', function($scope, $stateParams, $http, $window, easy_client, easy_bag) {
+.controller('MenuItemCtrl', function($scope, $stateParams, $http, $window, easy_client, easy_bag, easy_navigation) {
+  $scope.restaurant = easy_navigation.restaurant;
   $scope.item = [];
   $scope.quantity = 1;
   $scope.restaurant_id = $stateParams.r;  
