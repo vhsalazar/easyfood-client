@@ -125,7 +125,7 @@ service('easy_navigation', [function(){
         error(function(data, status, headers, config) {
               // called asynchronously if an error occurs
               // or server returns response with an error status.
-            });
+        });
       });
     }, function(error) {
       $scope.$apply(function() {
@@ -209,17 +209,16 @@ service('easy_navigation', [function(){
       quantity: $scope.quantity,
       special_request: $scope.special_request
     }
-    console.log("=======>");
-    console.log(bag_item);
+
     if (easy_bag.isValidItem(bag_item)){
       easy_bag.addItem(bag_item);
       $window.history.back();
     }else{
       var confirmPopup = $ionicPopup.confirm({
-       title: 'Warning:',
-       template: 'This change will clear the contents of your Bag',
-       cancelText: 'Cancel',
-       okText: 'Clear Bag'       
+        title: 'Warning:',
+        template: 'This change will clear the contents of your Bag',
+        cancelText: 'Cancel',
+        okText: 'Clear Bag'       
       });
       
       confirmPopup.then(function(res) {
@@ -227,9 +226,9 @@ service('easy_navigation', [function(){
          easy_bag.clear();
          easy_bag.addItem(bag_item);
          $window.history.back();
-       } else {
+        } else {
          console.log('You are not sure');
-       }
+        }
       });
     }
   }
