@@ -49,7 +49,7 @@ angular.module('starter.controllers', ['starter.api'])
     return bag.length;
   }
 
-  this.clearAll = function(){
+  this.clear = function(){
     bag = [];
   }
   
@@ -171,7 +171,7 @@ service('easy_navigation', [function(){
 })
 
 
-.controller('MenuItemCtrl', function($scope, $stateParams, $http, $window, easy_client, easy_bag, easy_navigation) {
+.controller('MenuItemCtrl', function($scope, $ionicPopup, $stateParams,  $http, $window, easy_client, easy_bag, easy_navigation) {
   $scope.restaurant = easy_navigation.restaurant;
   $scope.item = [];
   $scope.quantity = 1;
@@ -215,7 +215,22 @@ service('easy_navigation', [function(){
       easy_bag.addItem(bag_item);
       $window.history.back();
     }else{
-      alert('invalid');
+      var confirmPopup = $ionicPopup.confirm({
+       title: 'Warning:',
+       template: 'This change will clear the contents of your Bag',
+       cancelText: 'Cancel',
+       okText: 'Clear Bag'       
+      });
+      
+      confirmPopup.then(function(res) {
+       if(res) {
+         easy_bag.clear();
+         easy_bag.addItem(bag_item);
+         $window.history.back();
+       } else {
+         console.log('You are not sure');
+       }
+      });
     }
   }
 
