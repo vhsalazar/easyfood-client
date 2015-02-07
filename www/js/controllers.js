@@ -33,19 +33,19 @@ angular.module('starter.api', [])
 angular.module('starter.controllers', ['starter.api'])
 .service('easy_bag', [function () {
   var bag = [];
-  var restaurant_id = null; // this bag only support one restaurant
+  var restaurant = null; // this bag only support one restaurant
 
   this.isValidItem = function(bag_item){
     if (this.getLength() == 0){
       return true;
     }else{
-      return bag_item.restaurant_id == restaurant_id;
+      return bag_item.restaurant.id == restaurant.id;
     }
   }
 
   this.addItem = function(bag_item){
     bag.push(bag_item);
-    restaurant_id = bag_item.restaurant_id;
+    restaurant = bag_item.restaurant;
     return bag.length;
   }
 
@@ -204,7 +204,7 @@ service('easy_navigation', [function(){
 
   $scope.addToBag = function(){    
     bag_item = {
-      restaurant_id: $scope.restaurant.id,
+      restaurant: $scope.restaurant,
       menu_item: $scope.item,
       quantity: $scope.quantity,
       special_request: $scope.special_request
