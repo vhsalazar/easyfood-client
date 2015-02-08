@@ -44,6 +44,16 @@ angular.module('starter', ['ionic', 'LocalStorageModule', 'starter.controllers']
       }
     })
     
+    .state('app.mybag', {
+      url: "/mybag",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/my_bag.html",
+          controller: 'MyBagCtrl'
+        }
+      }
+    })
+
     .state('app.menu', {
       url: "/restaurants/:restaurant_id",
       views: {

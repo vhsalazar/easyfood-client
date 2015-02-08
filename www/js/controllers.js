@@ -31,9 +31,19 @@ angular.module('starter.api', [])
 }]);
 
 angular.module('starter.controllers', ['starter.api'])
-.service('easy_bag', [function () {
-  var bag = [];
+
+.service('easy_bag', [function EasyBag() {
+  var items = [];
   var restaurant = null; // this bag only support one restaurant
+  
+
+  this.getItems = function(){
+    return items;
+  }
+
+  this.getRestaurant = function(){
+    return restaurant;
+  }
 
   this.isValidItem = function(bag_item){
     if (this.getLength() == 0){
@@ -44,22 +54,31 @@ angular.module('starter.controllers', ['starter.api'])
   }
 
   this.addItem = function(bag_item){
-    bag.push(bag_item);
+    items.push(bag_item);
     restaurant = bag_item.restaurant;
-    return bag.length;
+    return items.length;
   }
 
   this.clear = function(){
-    bag = [];
+    restaurant = [];
+    items = [];
   }
   
   this.getLength = function(){
-    return bag.length;
+    return items.length;
+  }
+  
+  this.getTotal = function(){
+    total = 0;
+    for (i in items){
+      total += items[0].quantity * items[i].menu_item.price;
+    }
+    return total;
   }
 
-}]).
+}])
 
-service('easy_navigation', [function(){
+.service('easy_navigation', [function(){
   var restaurants = null;
   var restaurant = null;
   var section = null;
@@ -104,7 +123,7 @@ service('easy_navigation', [function(){
     $timeout(function() {
       $scope.closeLogin();
     }, 1000);
-  };
+  };  
 })
 
 .controller('ExploreCtrl', function($scope, $stateParams, $state, $window, $http, easy_client, easy_navigation) {
@@ -152,6 +171,12 @@ service('easy_navigation', [function(){
     $scope.restaurants = easy_navigation.restaurants;
   }
   
+})
+
+.controller('MyBagCtrl', function($scope, $stateParams, $state, $window, $http, easy_bag) {
+  $scope.my_bag = easy_bag;  
+  $scope.items  = easy_bag.items;
+  console.log(easy_bag);
 })
 
 .controller('RestaurantMenuCtrl', function($scope, $stateParams, $http, easy_client, easy_navigation) {

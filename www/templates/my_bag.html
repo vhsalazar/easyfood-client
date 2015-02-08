@@ -1,0 +1,19 @@
+<ion-view title="My Bag">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+  <h3>Restaurant</h3>
+  <ion-list>
+    <ion-item ng-repeat="item in my_bag.getItems()" class="item " ng-click="selectRestaurant(restaurant)">
+        {{item.quantity}}x {{item.menu_item.name}}
+        <span class="item-note">
+        {{item.menu_item.price}} Bs.</span>
+    </ion-item>  
+    <li class="item">
+      <strong>Total:</strong>
+      <span class="item-note"><strong>{{my_bag.getTotal()}} Bs.</strong></span>
+    </li>
+  </ion-list>    
+  </ion-content>
+</ion-view>
