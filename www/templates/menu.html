@@ -4,7 +4,7 @@
     <ion-nav-bar class="bar-stable nav-title-slide-ios7">
       <ion-nav-back-button class="button-clear"><i class="icon ion-ios7-arrow-back"></i> Back</ion-nav-back-button>
       <ion-nav-buttons side="right">
-        <button class="button icon ion-bag" ng-click="login()">
+        <button menu-toggle="right" class="button icon ion-bag">
         <span class="badge badge-assertive">{{bag_length()}}</span>
         </button>
         <ion-list>          
@@ -34,4 +34,24 @@
       </ion-list>
     </ion-content>
   </ion-side-menu>
+
+  <ion-side-menu side="right">
+    <header class="bar bar-header bar-stable">
+      <h1 class="title">My Bag</h1>
+    </header>
+    <ion-content class="has-header">
+      <ion-list>
+        <ion-item ng-repeat="item in my_bag.getItems()" class="item " ng-click="selectRestaurant(restaurant)">
+            {{item.quantity}}x {{item.menu_item.name}}
+            <span class="item-note">
+            {{item.menu_item.price}} Bs.</span>
+        </ion-item>  
+        <li class="item">
+          <strong>Total:</strong>
+          <span class="item-note"><strong>{{my_bag.getTotal()}} Bs.</strong></span>
+        </li>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+
 </ion-side-menus>
