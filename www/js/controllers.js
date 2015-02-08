@@ -71,7 +71,7 @@ angular.module('starter.controllers', ['starter.api'])
   this.getTotal = function(){
     total = 0;
     for (i in items){
-      total += items[0].quantity * items[i].menu_item.price;
+      total += items[i].quantity * items[i].menu_item.price;
     }
     return total;
   }
@@ -94,6 +94,7 @@ angular.module('starter.controllers', ['starter.api'])
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, easy_bag) {
   // Form data for the login modal
   $scope.loginData = {};
+  $scope.my_bag = easy_bag;
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
