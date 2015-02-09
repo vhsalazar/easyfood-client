@@ -6,12 +6,12 @@
     		<ion-item class="item item-divider">
     			{{section.name}}
     		</ion-item>
-			<ion-item class="item" ng-repeat="item in section.menu_items" href="#/app/item/{{item.id}}?r={{section.restaurant_id}}">
+			<a class="item" ng-repeat="item in section.menu_items" href="#/app/item/{{item.id}}?r={{section.restaurant_id}}">
     			{{item.name}}
     			<span class="item-note">
       			{{item.price}} Bs
     			</span>
-  		</ion-item>
+  		</a>
     	</div>    		
     	<div ng-repeat-end=""></div>
 	</ion-list>
