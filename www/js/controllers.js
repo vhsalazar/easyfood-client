@@ -139,13 +139,13 @@ angular.module('starter.controllers', ['starter.api'])
   $scope.supportsGeo = $window.navigator;
   $scope.position = null;
   $scope.restaurants = [];
-  $scope.getRestaurants = function() {
-    $scope.show();
+  $scope.getRestaurants = function() {    
     window.navigator.geolocation.getCurrentPosition(function(position) {
       $scope.$apply(function() {
         $scope.position = position;
         ll = "" + position.coords.latitude + "," + position.coords.longitude;
         console.log(position);
+        $scope.show();
         easy_client.explore(ll)
         .success(function(data, status, headers, config) {
           $scope.restaurants = data.restaurants;
@@ -159,13 +159,14 @@ angular.module('starter.controllers', ['starter.api'])
         });
       });
     }, function(error) {
+      alert('GPS ERROR :( makes me a sad panda');
       $scope.$apply(function() {
         ll = "-17.820529636235577,-63.23293028751897";
         easy_client.explore(ll)
         .success(function(data, status, headers, config) {
           $scope.restaurants = data.restaurants;
         }).
-        error(function(data, status, headers, config) {
+        error(function(data, status, headers, config) {          
             // called asynchronously if an error occurs
             // or server returns response with an error status.
           });
