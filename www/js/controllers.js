@@ -127,11 +127,20 @@ angular.module('starter.controllers', ['starter.api'])
   };  
 })
 
-.controller('ExploreCtrl', function($scope, $stateParams, $state, $window, $http, easy_client, easy_navigation) {
+.controller('ExploreCtrl', function($scope, $stateParams, $ionicLoading, $state, $window, $http, easy_client, easy_navigation) {
+  $scope.show = function() {
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+  };
+  $scope.hide = function(){
+    $ionicLoading.hide();
+  };
   $scope.supportsGeo = $window.navigator;
   $scope.position = null;
   $scope.restaurants = [];
   $scope.getRestaurants = function() {
+    $scope.show();
     window.navigator.geolocation.getCurrentPosition(function(position) {
       $scope.$apply(function() {
         $scope.position = position;
@@ -145,6 +154,8 @@ angular.module('starter.controllers', ['starter.api'])
         error(function(data, status, headers, config) {
               // called asynchronously if an error occurs
               // or server returns response with an error status.
+        }).finally(function(){
+          $scope.hide()
         });
       });
     }, function(error) {
