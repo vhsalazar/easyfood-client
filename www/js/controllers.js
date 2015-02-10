@@ -1,4 +1,4 @@
-var BASE_URL = "http://192.168.5.145:3000";
+var BASE_URL = "http://104.236.80.144:3000";
 
 angular.module('starter.api', [])
 .service('easy_client', ['$window', '$http', function (win, $http) {
