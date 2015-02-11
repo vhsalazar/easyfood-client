@@ -1,0 +1,41 @@
+<div class="modal">
+  <ion-header-bar>
+    <h1 class="title">Edit Item Detail</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeModal()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content ng-controller="ItemBagCtrl">
+    <div class="card">
+      <div class="item item-divider">
+        {{item.name}} - {{item.price}}
+      </div>
+      <div class="item item-text-wrap">
+        {{item.description}}
+      </div>
+    </div>
+
+    <div class="row row-center">
+      <div class="col">
+        <button class="button ion-minus button-positive button-block" ng-click="decrease()"></button>
+      </div>
+      <div class="col center">
+        <h3>{{quantity}}</h3>
+      </div>
+      <div class="col col-center">
+        <button class="button ion-plus button-positive button-block" ng-click="increase()"></button>
+      </div>
+      <div class="col col-50">  
+        <button class="button button-assertive button-block" ng-click="remove()">Remove Item</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label class="item item-input">
+          <textarea placeholder="Any special request?" ng-model="special_request"></textarea>
+        </label>
+      </div>
+    </div>
+  </ion-content>
+</div>
+

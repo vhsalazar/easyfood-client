@@ -43,7 +43,7 @@
     <h3>{{my_bag.getRestaurant().name}}</h3>
 
       <ion-list ng-show="my_bag.getItems().length > 0">
-        <ion-item ng-repeat="item in my_bag.getItems()" class="item " ng-click="selectRestaurant(restaurant)">
+        <ion-item ng-repeat="item in my_bag.getItems()" class="item " ng-click="selectItem(item)">
             {{item.quantity}}x {{item.menu_item.name}}
             <span class="item-note">
             {{item.menu_item.price}} Bs.</span>

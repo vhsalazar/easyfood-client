@@ -35,7 +35,15 @@ angular.module('starter.controllers', ['starter.api'])
 .service('easy_bag', [function EasyBag() {
   var items = [];
   var restaurant = null; // this bag only support one restaurant
-  
+  var selected_item = null;
+
+  this.getSelectedItem = function(){
+    return selected_item;
+  }
+
+  this.selectItem = function (item){
+    selected_item = item;
+  }
 
   this.getItems = function(){
     return items;
@@ -57,6 +65,18 @@ angular.module('starter.controllers', ['starter.api'])
     items.push(bag_item);
     restaurant = bag_item.restaurant;
     return items.length;
+  }
+
+  this._remove = function(arr, item) {
+      for(var i = arr.length; i--;) {
+          if(arr[i] === item) {
+              arr.splice(i, 1);
+          }
+      }
+  }
+
+  this.removeItem = function(item){
+    this._remove(items, item);    
   }
 
   this.clear = function(){
@@ -83,6 +103,8 @@ angular.module('starter.controllers', ['starter.api'])
   var restaurant = null;
   var section = null;
   var item = null;
+  var item_edit = null;
+
   this.clearAll = function(){
     restaurant = null;
     section = null;
@@ -90,8 +112,31 @@ angular.module('starter.controllers', ['starter.api'])
   }
 }])
 
+.controller('ItemBagCtrl', function($scope, $ionicModal, $timeout, easy_bag) {
+  $scope.selected_item = easy_bag.getSelectedItem();
+  $scope.item = $scope.selected_item.menu_item;
+  $scope.quantity = $scope.selected_item.quantity;
+  $scope.special_request = $scope.selected_item.special_request;
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, easy_bag) {
+  $scope.decrease = function(){
+    if ($scope.quantity > 1){
+      $scope.quantity -= 1;      
+    }    
+    $scope.selected_item.quantity = $scope.quantity;
+  }
+
+  $scope.increase = function(){
+    $scope.quantity++;
+    $scope.selected_item.quantity = $scope.quantity;
+  }
+
+  $scope.remove = function(){
+    easy_bag.removeItem($scope.selected_item);
+    $scope.$parent.closeModal();
+  }
+
+})
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, easy_bag, easy_navigation) {
   // Form data for the login modal
   $scope.loginData = {};
   $scope.my_bag = easy_bag;
@@ -124,7 +169,27 @@ angular.module('starter.controllers', ['starter.api'])
     $timeout(function() {
       $scope.closeLogin();
     }, 1000);
-  };  
+  }; 
+
+
+  $scope.closeModal = function(){
+    $scope.modal.hide();
+  }
+
+  $scope.showModal = function(){
+    $ionicModal.fromTemplateUrl('templates/item_modal.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modal = modal;
+      $scope.modal.show();
+    });
+  }
+
+  $scope.selectItem = function(item){
+    console.log(item);
+    easy_bag.selectItem(item);    
+    $scope.showModal();
+  } 
 })
 
 .controller('ExploreCtrl', function($scope, $stateParams, $ionicLoading, $state, $window, $http, easy_client, easy_navigation) {
@@ -189,7 +254,6 @@ angular.module('starter.controllers', ['starter.api'])
 .controller('MyBagCtrl', function($scope, $stateParams, $state, $window, $http, easy_bag) {
   $scope.my_bag = easy_bag;  
   $scope.items  = easy_bag.items;
-  console.log(easy_bag);
 })
 
 .controller('RestaurantMenuCtrl', function($scope, $stateParams, $http, easy_client, easy_navigation) {
